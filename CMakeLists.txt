@@ -47,6 +47,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 # add the binary tree to the search path for include files
 target_include_directories(${PROJECT_NAME} PUBLIC)
 
+# compile commands: by default, compile in Release mode
+# type 'cmake -DCMAKE_BUILD_TYPE=Debug ..' in terminal for compiling in Debug mode
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 #######################
 # Tests
 #######################
