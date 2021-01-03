@@ -2,7 +2,13 @@
 project(empty)
 
 cmake_minimum_required(VERSION 3.0.0)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+
+# compile commands: by default, compile in Release mode
+# type 'cmake -DCMAKE_BUILD_TYPE=Debug ..' in terminal for compiling in Debug mode
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 # add libraries
 add_subdirectory(commonutilities)
@@ -12,13 +18,13 @@ find_package(ZLIB REQUIRED)
 
 set(LINK_LIBRARIES     
     coreLib
-    commonutilities 
+    commonutilities
     ${ZLIB_LIBRARIES}
 )
 
 include_directories(
-    core    
-    commonutilities
+    core
+    commonutilities/core
 )
 
 #######################
@@ -47,12 +53,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 # add the binary tree to the search path for include files
 target_include_directories(${PROJECT_NAME} PUBLIC)
 
-# compile commands: by default, compile in Release mode
-# type 'cmake -DCMAKE_BUILD_TYPE=Debug ..' in terminal for compiling in Debug mode
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
 #######################
 # Tests
 #######################
@@ -63,7 +63,7 @@ add_executable("${PROJECT_NAME}_unitTests" EXCLUDE_FROM_ALL ${TEST_SOURCES})
 
 target_link_libraries("${PROJECT_NAME}_unitTests" PUBLIC
     gtest_main
-    gmock_main    
+    gmock_main
     ${LINK_LIBRARIES}
 )
 
