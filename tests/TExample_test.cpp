@@ -2,11 +2,11 @@
 #include "TParameters.h"
 #include "TExample.h"
 
-TEST(EXAMPLETESTSUIT, EXAMPLETEST){
-    TParameters params;
+TEST(EXAMPLETESTSUITE, EXAMPLETEST){
+    coretools::TParameters params;
     int argument = 10;
-    params.addParameter("argument", toString(argument));
-    TLog logfile;
+    params.addParameter("argument", coretools::str::toString(argument));
+    coretools::TLog logfile;
     TExample test(params, &logfile);
 
     EXPECT_EQ(test.getArgument(), argument);

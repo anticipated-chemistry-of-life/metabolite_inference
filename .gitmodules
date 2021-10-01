@@ -1,3 +1,4 @@
-[submodule "commonutilities"]
-	path = commonutilities
-	url = git@bitbucket.org:wegmannlab/commonutilities.git
+[submodule "coretools"]
+	path = coretools
+	url = https://bitbucket.org/WegmannLab/coretools.git
+	branch = master

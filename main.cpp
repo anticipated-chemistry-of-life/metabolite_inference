@@ -1,8 +1,5 @@
 /*
- * estimHet.cpp
- *
- *  Created on: Feb 19, 2015
- *      Author: wegmannd
+ * main.cpp
  */
 
 #include "TMain.h"
@@ -13,12 +10,11 @@
 
 #include "TExample.h"
 
-
 //---------------------------------------------------------------------------
 // Existing Tasks
 //---------------------------------------------------------------------------
 
-void addTaks(TMain & main) {
+void addTaks(coretools::TMain & main) {
 	// Tasks consist of a name and a pointer to a TTask object.
     // Use main.addRegularTask() to add a regular task (shown in list of available tasks)
 	// Use main.addDebugTask()   to add a debug task (not shown in list of available tasks)
@@ -30,10 +26,10 @@ void addTaks(TMain & main) {
 // Existing Integration tests
 //---------------------------------------------------------------------------
 
-void addTests(TMain & main){
+void addTests(coretools::TMain & main){
     // Use main.addTest to add integration tests
 
-	// Use main.addTestsuite to add test suits
+	// Use main.addTestSuite to add test suites
 };
 
 
@@ -42,11 +38,12 @@ void addTests(TMain & main){
 //---------------------------------------------------------------------------
 
 int main(int argc, char* argv[]){
-	//Create main by providing a program name, a version, link to repo and contact email
-	TMain main("NAME", "0.1", "https://bitbucket.org/wegmannlab/name", "daniel.wegmann@unifr.ch");
+	//Create main by providing a program name, a version, an affiliation, link to repo and contact email
+    coretools::TMain main("EMPTY", "0.1", "University of Fribourg", "https://bitbucket.org/wegmannlab/empty", "daniel.wegmann@unifr.ch");
 
-	//add existing tasks
+	//add existing tasks and tests
 	addTaks(main);
+    addTests(main);
 
 	//now run program
 	return main.run(argc, argv);

@@ -1,7 +1,7 @@
 # Project
 project(empty)
 
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 17)
 
 # compile commands: by default, compile in Release mode
@@ -11,20 +11,21 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # add libraries
-add_subdirectory(commonutilities)
+add_subdirectory(coretools)
 
 # locate external libraries
 find_package(ZLIB REQUIRED)
 
-set(LINK_LIBRARIES     
-    coreLib
-    commonutilities
-    ${ZLIB_LIBRARIES}
-)
+set(LINK_LIBRARIES
+        coreLib
+        coretools
+        ${ZLIB_LIBRARIES}
+        )
 
 include_directories(
-    core
-    commonutilities/core
+        core
+        coretools/core
+        coretools/core/Types
 )
 
 #######################
@@ -35,6 +36,7 @@ file(GLOB_RECURSE CORE_SOURCES core/*.h core/*.cpp)
 
 #Core library
 add_library(coreLib STATIC ${CORE_SOURCES})
+target_compile_definitions(coreLib PUBLIC)
 
 #######################
 # Executable
@@ -42,13 +44,13 @@ add_library(coreLib STATIC ${CORE_SOURCES})
 
 # add executable to be built
 add_executable(${PROJECT_NAME}
-    main.cpp 
-)
+        main.cpp
+        )
 
 # link libraries
-target_link_libraries(${PROJECT_NAME} PUBLIC    
-    ${LINK_LIBRARIES}
-)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+        ${LINK_LIBRARIES}
+        )
 
 # add the binary tree to the search path for include files
 target_include_directories(${PROJECT_NAME} PUBLIC)
@@ -62,13 +64,13 @@ file(GLOB_RECURSE TEST_SOURCES tests/*.h tests/*.cpp)
 add_executable("${PROJECT_NAME}_unitTests" EXCLUDE_FROM_ALL ${TEST_SOURCES})
 
 target_link_libraries("${PROJECT_NAME}_unitTests" PUBLIC
-    gtest_main
-    gmock_main
-    ${LINK_LIBRARIES}
-)
+        gtest_main
+        gmock_main
+        ${LINK_LIBRARIES}
+        )
 
 target_include_directories("${PROJECT_NAME}_unitTests" PUBLIC
-    "${PROJECT_BINARY_DIR}" #google tests will be cloned in there
-    commonutilities/tests
-    tests
-)
+        "${PROJECT_BINARY_DIR}" #google tests will be cloned in there
+        coretools/tests
+        tests
+        )

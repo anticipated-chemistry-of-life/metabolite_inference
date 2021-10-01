@@ -16,33 +16,30 @@
 //--------------------------------------
 class TExample{
 private:
-	TLog* _logfile;
+    coretools::TLog* _logfile;
 	int _argument;
 
 public:
-	TExample(TParameters & Parameters, TLog* Logfile);
-	void doSomething(TRandomGenerator* Randomgenerator);
+	TExample(coretools::TParameters & Parameters, coretools::TLog* Logfile);
+	void doSomething(coretools::TRandomGenerator* Randomgenerator);
 
-	int getArgument(){ return _argument; };
+	int getArgument() const{ return _argument; };
 };
-
-
 
 //--------------------------------------
 // Tasks
 //--------------------------------------
-class TTask_example:public TTask{
+class TTask_example:public coretools::TTask{
 public:
-	//constructtor must fill explanation shown to users
+	//constructor must fill explanation shown to users
 	TTask_example(){ _explanation = "An example task"; };
 
-	//a task must overlaod the run function that takes two arguments: TParameters & Parameters, TLog* Logfile
+	//a task must overload the run function that takes two arguments: coretools::TParameters & Parameters, coretools::TLog* Logfile
 	//Usually, a task creates an object and calls its function
-	void run(TParameters & Parameters, TLog* Logfile){
+	void run(coretools::TParameters & Parameters, coretools::TLog* Logfile) override {
 		TExample example(Parameters, Logfile);
 		example.doSomething(_randomGenerator);
 	};
-
 };
 
 
