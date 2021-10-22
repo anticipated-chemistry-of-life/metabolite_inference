@@ -4,11 +4,36 @@ project(empty)
 cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 17)
 
+# Maximal
+#set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra  -Weffc++ -Wconversion -Wsign-conversion -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wlogical-op -Wdouble-promotion -Wformat=2")
+
+# Reasonable
+#set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra -pedantic -Wno-long-long -Wno-strict-aliasing")
+
+# Minimal
+set(CMAKE_CXX_FLAGS "-Wall  -Wextra")
+
+# Needed for Language Server Protocol
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # compile commands: by default, compile in Release mode
 # type 'cmake -DCMAKE_BUILD_TYPE=Debug ..' in terminal for compiling in Debug mode
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
+
+# locate external libraries
+find_package(ZLIB REQUIRED)
+find_package(Armadillo REQUIRED)
+
+# Download coretools and stattools
+include(FetchContent)
+FetchContent_Declare(coretools
+        GIT_REPOSITORY    https://glis-glis@bitbucket.org/wegmannlab/coretools.git
+        GIT_TAG           master
+        SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/coretools"
+        )
+FetchContent_Populate(coretools)
 
 # add libraries
 add_subdirectory(coretools)
