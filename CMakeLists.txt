@@ -33,10 +33,7 @@ FetchContent_Declare(coretools
         GIT_TAG           master
         SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/coretools"
         )
-FetchContent_Populate(coretools)
-
-# add libraries
-add_subdirectory(coretools)
+FetchContent_MakeAvailable(coretools)
 
 # locate external libraries
 find_package(ZLIB REQUIRED)
