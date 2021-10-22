@@ -1,4 +1,0 @@
-[submodule "coretools"]
-	path = coretools
-	url = https://bitbucket.org/WegmannLab/coretools.git
-	branch = master
