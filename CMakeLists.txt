@@ -29,7 +29,7 @@ find_package(Armadillo REQUIRED)
 # Download coretools and stattools
 include(FetchContent)
 FetchContent_Declare(coretools
-        GIT_REPOSITORY    https://glis-glis@bitbucket.org/wegmannlab/coretools.git
+        GIT_REPOSITORY    https://bitbucket.org/wegmannlab/coretools.git
         GIT_TAG           master
         SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/coretools"
         )
