@@ -1,30 +1,18 @@
-# Project
-project(empty)
-
-cmake_minimum_required(VERSION 3.17)
-set(CMAKE_CXX_STANDARD 17)
-
-# Maximal
-#set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra  -Weffc++ -Wconversion -Wsign-conversion -Wpedantic -Wshadow -Wnon-virtual-dtor -Wold-style-cast -Wcast-align -Woverloaded-virtual -Wlogical-op -Wdouble-promotion -Wformat=2")
-
-# Reasonable
-#set(CMAKE_CXX_FLAGS "-Werror -Wall -Wextra -pedantic -Wno-long-long -Wno-strict-aliasing")
-
-# Minimal
-set(CMAKE_CXX_FLAGS "-Wall  -Wextra")
-
-# Needed for Language Server Protocol
+cmake_minimum_required(VERSION 3.14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# compile commands: by default, compile in Release mode
-# type 'cmake -DCMAKE_BUILD_TYPE=Debug ..' in terminal for compiling in Debug mode
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-# locate external libraries
-find_package(ZLIB REQUIRED)
-find_package(Armadillo REQUIRED)
+if (POLICY CMP0048)
+    cmake_policy(SET CMP0048 NEW)
+endif (POLICY CMP0048)
+
+# Project
+project(empty LANGUAGES CXX)
+
+# Needed for Language Server Protocol
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Download coretools and stattools
 include(FetchContent)
@@ -35,21 +23,6 @@ FetchContent_Declare(coretools
         )
 FetchContent_MakeAvailable(coretools)
 
-# locate external libraries
-find_package(ZLIB REQUIRED)
-
-set(LINK_LIBRARIES
-        coreLib
-        coretools
-        ${ZLIB_LIBRARIES}
-        )
-
-include_directories(
-        core
-        coretools/core
-        coretools/core/Types
-)
-
 #######################
 # Create core library
 #######################
@@ -58,7 +31,13 @@ file(GLOB_RECURSE CORE_SOURCES core/*.h core/*.cpp)
 
 #Core library
 add_library(coreLib STATIC ${CORE_SOURCES})
-target_compile_definitions(coreLib PUBLIC)
+
+target_sources(coreLib PRIVATE ${CORE_SOURCES})
+target_include_directories(coreLib PRIVATE core SYSTEM INTERFACE core)
+target_link_libraries(coreLib PUBLIC coretools)
+target_compile_features(coreLib PUBLIC cxx_std_17)
+set_target_properties(coreLib PROPERTIES CXX_EXTENSIONS OFF)
+target_compile_options(coreLib PRIVATE -Wall -Wextra)
 
 #######################
 # Executable
@@ -71,11 +50,10 @@ add_executable(${PROJECT_NAME}
 
 # link libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC
-        ${LINK_LIBRARIES}
+        coreLib
         )
-
-# add the binary tree to the search path for include files
-target_include_directories(${PROJECT_NAME} PUBLIC)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 
 #######################
 # Tests
@@ -88,7 +66,7 @@ add_executable("${PROJECT_NAME}_unitTests" EXCLUDE_FROM_ALL ${TEST_SOURCES})
 target_link_libraries("${PROJECT_NAME}_unitTests" PUBLIC
         gtest_main
         gmock_main
-        ${LINK_LIBRARIES}
+        coreLib
         )
 
 target_include_directories("${PROJECT_NAME}_unitTests" PUBLIC
