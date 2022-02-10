@@ -19,7 +19,7 @@ include(FetchContent)
 FetchContent_Declare(coretools
         GIT_REPOSITORY    https://bitbucket.org/wegmannlab/coretools.git
         GIT_TAG           master
-        SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/coretools"
+        SOURCE_DIR        "${CMAKE_SOURCE_DIR}/coretools"
         )
 FetchContent_MakeAvailable(coretools)
 
@@ -58,19 +58,28 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 #######################
 # Tests
 #######################
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG        main
+)
+FetchContent_MakeAvailable(googletest)
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+option(gtest_disable_pthreads "Disable uses of pthreads in gtest." ON)
+
+# define executable
+add_executable("${PROJECT_NAME}_unitTests" EXCLUDE_FROM_ALL)
+
 #assemble list of test cpp and h files
 file(GLOB_RECURSE TEST_SOURCES tests/*.h tests/*.cpp)
 
-add_executable("${PROJECT_NAME}_unitTests" EXCLUDE_FROM_ALL ${TEST_SOURCES})
+target_include_directories("${PROJECT_NAME}_unitTests" PRIVATE coretools/core/IntegrationTests coretools/tests tests)
 
-target_link_libraries("${PROJECT_NAME}_unitTests" PUBLIC
-        gtest_main
-        gmock_main
-        coreLib
-        )
+target_sources("${PROJECT_NAME}_unitTests" PRIVATE ${TEST_SOURCES})
+target_link_libraries("${PROJECT_NAME}_unitTests" PRIVATE coreLib gtest_main gmock_main)
+target_compile_features("${PROJECT_NAME}_unitTests" PRIVATE cxx_std_17)
+target_compile_definitions("${PROJECT_NAME}_unitTests" PRIVATE CHECK_INTERVALS)
+set_target_properties("${PROJECT_NAME}_unitTests" PROPERTIES CXX_EXTENSIONS OFF)
+target_compile_options("${PROJECT_NAME}_unitTests" PRIVATE -Wall -Wextra)
 
-target_include_directories("${PROJECT_NAME}_unitTests" PUBLIC
-        "${PROJECT_BINARY_DIR}" #google tests will be cloned in there
-        coretools/tests
-        tests
-        )
