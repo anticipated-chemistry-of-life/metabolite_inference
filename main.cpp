@@ -27,7 +27,7 @@ void addTaks(coretools::TMain &main) {
 // Existing Integration tests
 //---------------------------------------------------------------------------
 
-void addTests(coretools::TMain &main){
+void addTests(coretools::TMain &){
 	// Use main.addTest to add integration tests
 
 	// Use main.addTestSuite to add test suites

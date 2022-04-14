@@ -16,14 +16,13 @@
 //--------------------------------------
 class TExample {
 private:
-	coretools::TLog *_logfile;
-	int _argument;
+	size_t _argument;
 
 public:
-	TExample(coretools::TParameters &Parameters, coretools::TLog *Logfile);
-	void doSomething(coretools::TRandomGenerator *Randomgenerator);
+	TExample();
+	void doSomething() const;
 
-	int getArgument() const { return _argument; };
+	[[nodiscard]] size_t getArgument() const { return _argument; };
 };
 
 //--------------------------------------
@@ -37,10 +36,9 @@ public:
 	// a task must overload the run function that takes two arguments:
 	// coretools::TParameters & Parameters, coretools::TLog* Logfile Usually, a
 	// task creates an object and calls its function
-	void run(coretools::TParameters &Parameters,
-		 coretools::TLog *Logfile) override {
-		TExample example(Parameters, Logfile);
-		example.doSomething(_randomGenerator);
+	void run() override {
+		TExample example;
+		example.doSomething();
 	};
 };
 

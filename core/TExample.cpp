@@ -6,24 +6,22 @@
  */
 
 #include "TExample.h"
+#include "TError.h"
 
 //--------------------------------------
 // TExample
 //--------------------------------------
-TExample::TExample(coretools::TParameters &Parameters,
-		   coretools::TLog *Logfile) {
-	_logfile  = Logfile;
-	_argument = Parameters.getParameter<int>("argument");
+TExample::TExample() {
+	using namespace coretools::instances;
 
-	_logfile->list("Will use argument " + coretools::str::toString(_argument) +
-		       ".");
-};
+	_argument = parameters().getParameter<size_t>("argument");
+	logfile().list("Will use argument " + coretools::str::toString(_argument) + ".");
+}
 
-void TExample::doSomething(coretools::TRandomGenerator *Randomgenerator) {
-	_logfile->startIndent("Drawing " + coretools::str::toString(_argument) +
-			      " random values:");
-	for (int i = 0; i < _argument; ++i) {
-		_logfile->list(Randomgenerator->getRand());
-	}
-	_logfile->endIndent();
-};
+void TExample::doSomething() const {
+	using namespace coretools::instances;
+
+	logfile().startIndent("Drawing " + coretools::str::toString(_argument) + " random values:");
+	for (size_t i = 0; i < _argument; ++i) { logfile().list(randomGenerator().getRand()); }
+	logfile().endIndent();
+}
