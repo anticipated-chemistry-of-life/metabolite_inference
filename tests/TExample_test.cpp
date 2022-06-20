@@ -3,11 +3,9 @@
 #include "TExample.h"
 
 TEST(EXAMPLETESTSUITE, EXAMPLETEST){
-    coretools::TParameters params;
     int argument = 10;
-    params.addParameter("argument", coretools::str::toString(argument));
-    coretools::TLog logfile;
-    TExample test(params, &logfile);
+    coretools::instances::parameters().addParameter("argument", coretools::str::toString(argument));
+    TExample test;
 
     EXPECT_EQ(test.getArgument(), argument);
 }
