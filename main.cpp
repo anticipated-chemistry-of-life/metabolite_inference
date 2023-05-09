@@ -2,7 +2,7 @@
  * main.cpp
  */
 
-#include "TMain.h"
+#include "coretools/Main/TMain.h"
 
 //---------------------------------------------------------------------------
 // Includes for tasks
@@ -40,9 +40,9 @@ void addTests(coretools::TMain &){
 int main(int argc, char *argv[]) {
 	// Create main by providing a program name, a version, an
 	// affiliation, link to repo and contact email
-	coretools::TMain main("EMPTY", "0.1", "University of Fribourg",
-			      "https://bitbucket.org/wegmannlab/empty",
-			      "daniel.wegmann@unifr.ch");
+	coretools::TMain main("metabolite_inference", "0.1", "University of Fribourg",
+			      "https://bitbucket.org/wegmannlab/metabolite_inference",
+			      "marco.visani@unifr.ch");
 
 	// add existing tasks and tests
 	addTaks(main);
