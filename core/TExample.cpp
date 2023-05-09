@@ -6,7 +6,7 @@
  */
 
 #include "TExample.h"
-#include "TError.h"
+#include "coretools/Main/TError.h"
 
 using namespace coretools::instances;
 

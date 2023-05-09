@@ -8,8 +8,8 @@
 #ifndef TEXAMPLETASK_H_
 #define TEXAMPLETASK_H_
 
-#include "TParameters.h"
-#include "TTask.h"
+#include "coretools/Main/TParameters.h"
+#include "coretools/Main/TTask.h"
 
 //--------------------------------------
 // TExample
