@@ -18,6 +18,7 @@
 typedef coretools::Positive<double> TypeGamma;
 typedef coretools::Positive<double> TypeDelta;
 typedef coretools::UnsignedInt<uint16_t> TypeLotus;
+typedef coretools::WeakType<bool> TypeX;
 
 // ... add more
 

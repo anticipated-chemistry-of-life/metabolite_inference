@@ -22,16 +22,17 @@ protected:
 	// parameters
 	stattools::TParameterTyped<TypeGamma, 1> *_gamma = nullptr;
 	stattools::TParameterTyped<TypeDelta, 1> *_delta = nullptr;
+	stattools::TParameterTyped<TypeX, 2> *_X         = nullptr;
 	// ... add more
 
 	// prefix for writing
 	std::string _out;
-
 	void _simulateUnderPrior(Storage *Data) override;
 
 	// update functions
 	void _updateGamma();
 	void _updateDelta();
+	void _updateX();
 
 public:
 	TMetabolitePrior(stattools::TParameterTyped<TypeGamma, 1> *Gamma, stattools::TParameterTyped<TypeDelta, 1> *Delta,

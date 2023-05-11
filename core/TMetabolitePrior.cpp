@@ -43,10 +43,15 @@ void TMetabolitePrior::_updateGamma() {
 }
 
 void TMetabolitePrior::_updateDelta() {
-	// TODO: same as updateGamma
+	if (_delta->update()) {
+		const double LLRatio = 0.0;
+		const double logH = LLRatio + _delta->getLogPriorRatio();
+		_delta->acceptOrReject(logH, 0);
+	}
 }
 
 void TMetabolitePrior::updateParams() {
 	_updateGamma();
 	_updateDelta();
+	_updateX();
 }

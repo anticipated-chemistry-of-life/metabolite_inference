@@ -20,9 +20,8 @@ void addTaks(coretools::TMain &main) {
 	// list of available tasks) Use main.addDebugTask() to add a
 	// debug task (not shown in list of available tasks)
 
-        // TODO: add all your tasks here (infer and simulate)
-	main.addRegularTask("example", new TTask_example());
-        main.addRegularTask("infer", new TTask_infer());
+	// TODO: add all your tasks here (infer and simulate)
+	main.addRegularTask("infer", new TTask_infer());
 };
 
 //---------------------------------------------------------------------------
@@ -30,9 +29,9 @@ void addTaks(coretools::TMain &main) {
 //---------------------------------------------------------------------------
 
 void addTests(coretools::TMain &){
-	// Use main.addTest to add integration tests
+    // Use main.addTest to add integration tests
 
-	// Use main.addTestSuite to add test suites
+    // Use main.addTestSuite to add test suites
 };
 
 //---------------------------------------------------------------------------
@@ -43,8 +42,7 @@ int main(int argc, char *argv[]) {
 	// Create main by providing a program name, a version, an
 	// affiliation, link to repo and contact email
 	coretools::TMain main("metabolite_inference", "0.1", "University of Fribourg",
-			      "https://bitbucket.org/wegmannlab/metabolite_inference",
-			      "marco.visani@unifr.ch");
+	                      "https://bitbucket.org/wegmannlab/metabolite_inference", "marco.visani@unifr.ch");
 
 	// add existing tasks and tests
 	addTaks(main);

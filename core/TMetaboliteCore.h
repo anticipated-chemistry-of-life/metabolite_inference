@@ -11,9 +11,9 @@
 #include "TMetaboliteTypes.h"
 #include "coretools/Main/TParameters.h"
 #include "coretools/Main/TTask.h"
+#include "stattools/DAG/TDAGBuilder.h"
 #include "stattools/ParametersObservations/TObservationTyped.h"
 #include "stattools/ParametersObservations/TParameterTyped.h"
-#include "stattools/DAG/TDAGBuilder.h"
 
 //--------------------------------------
 // TExample
@@ -29,7 +29,8 @@ private:
 	stattools::TObservationTyped<TypeLotus, 2> _lotus;
 
 public:
-	TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus, 2> &Data, stattools::TDAGBuilder &DAGBuilder, const std::string &Filename);
+	TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus, 2> &Data, stattools::TDAGBuilder &DAGBuilder,
+	                 const std::string &Filename);
 };
 
 class TMetaboliteCore {

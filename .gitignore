@@ -3,6 +3,12 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+build/
+cmake-build-debug/
+coretools/
+genometools/
+stattools/
+
 # Node artifact files
 node_modules/
 dist/
