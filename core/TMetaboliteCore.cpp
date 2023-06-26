@@ -1,8 +1,8 @@
 /*
  * TExampleTask.cpp
  *
- *  Created on: Nov 30, 2020
- *      Author: phaentu
+ *  Created on: May 15, 2023
+ *      Author: mvisani
  */
 
 #include "TMetaboliteCore.h"
@@ -10,7 +10,9 @@
 #include "coretools/Main/TError.h"
 #include "coretools/Storage/TDataFile.h"
 #include "stattools/MCMC/TMCMC.h"
+#include "stattools/Priors/TPriorBernouilli.h"
 #include "stattools/Priors/TPriorExponential.h"
+#include "stattools/Priors/TPriorNormal.h"
 
 using namespace coretools::instances;
 
@@ -24,8 +26,11 @@ TMetaboliteModel::TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus
              {Filename, "1"}),
       _delta("delta", std::make_shared<stattools::prior::TExponentialFixed<stattools::TParameterBase, TypeDelta, 1>>(),
              {Filename, "1"}),
+      _trueX("X", std::make_shared<stattools::prior::TBernouilliFixed<stattools::TParameterBase, TypeX, 2>>(),
+             {Filename, "1"}),
+      _mu("mu", std::make_shared<stattools::prior::TNormalFixed<stattools::TParameterBase, TypeMu, 1>>(),
+          {Filename, "1"}),
       _lotus("lotus", std::make_shared<TMetabolitePrior>(&_gamma, &_delta, Filename), Data, {}) {
-
 	DAGBuilder.addToDAG({&_gamma, &_delta});
 	DAGBuilder.addToDAG(&_lotus);
 

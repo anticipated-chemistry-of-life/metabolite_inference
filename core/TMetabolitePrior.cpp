@@ -13,7 +13,6 @@ TMetabolitePrior::TMetabolitePrior(stattools::TParameterTyped<TypeGamma, 1> *Gam
 void TMetabolitePrior::_simulateUnderPrior(Storage *Data) {
 	// TODO: write simulation
 }
-
 void TMetabolitePrior::initializeInferred() {
 	// set the size of your parameters
 	_gamma->initStorage(); // by default: size = 1
@@ -45,13 +44,26 @@ void TMetabolitePrior::_updateGamma() {
 void TMetabolitePrior::_updateDelta() {
 	if (_delta->update()) {
 		const double LLRatio = 0.0;
-		const double logH = LLRatio + _delta->getLogPriorRatio();
+		const double logH    = LLRatio + _delta->getLogPriorRatio();
 		_delta->acceptOrReject(logH, 0);
+	}
+}
+
+void TMetabolitePrior::_updateMu() {
+	if (_mu->update()) {
+		const double LLratio = 0.0;
+		const double logH    = LLratio + _mu->getLogPriorRatio();
+		_mu->acceptOrReject(logH, 0);
 	}
 }
 
 void TMetabolitePrior::updateParams() {
 	_updateGamma();
 	_updateDelta();
-	_updateX();
+	_updateMu();
+}
+
+double TMetabolitePrior::_LLRatio(const TypeX *trueX, const TypeLotus *lotus, const TypeGamma *gamma,
+                                  const TypeDelta *delta, const TypeGamma *gamma_new, const TypeDelta *delta_new) {
+
 }

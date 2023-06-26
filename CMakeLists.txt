@@ -42,7 +42,7 @@ FetchContent_MakeAvailable(coretools stattools genometools)
 file(GLOB_RECURSE CORE_SOURCES core/*.h core/*.cpp)
 
 #Core library
-add_library(coreLib STATIC ${CORE_SOURCES})
+add_library(coreLib STATIC ${CORE_SOURCES} core/TTree.h core/TTree.cpp)
 
 target_sources(coreLib PRIVATE ${CORE_SOURCES})
 target_include_directories(coreLib PRIVATE core SYSTEM INTERFACE core)
@@ -58,7 +58,7 @@ target_compile_options(coreLib PRIVATE -Wall -Wextra)
 # add executable to be built
 add_executable(${PROJECT_NAME}
         main.cpp
-        )
+        core/TTree.cpp core/TTree.cpp core/TTree.h)
 
 # link libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC

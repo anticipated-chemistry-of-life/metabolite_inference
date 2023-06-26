@@ -22,7 +22,8 @@ protected:
 	// parameters
 	stattools::TParameterTyped<TypeGamma, 1> *_gamma = nullptr;
 	stattools::TParameterTyped<TypeDelta, 1> *_delta = nullptr;
-	stattools::TParameterTyped<TypeX, 2> *_X         = nullptr;
+	stattools::TParameterTyped<TypeX, 2> *_trueX     = nullptr;
+	stattools::TParameterTyped<TypeMu, 1> *_mu       = nullptr;
 	// ... add more
 
 	// prefix for writing
@@ -32,11 +33,13 @@ protected:
 	// update functions
 	void _updateGamma();
 	void _updateDelta();
-	void _updateX();
+	static void _updateX();
+	void _updateMu();
+	double _LLRatio(const TypeX *trueX, const TypeLotus *lotus, const TypeGamma *gamma, const TypeDelta *delta,
+	                const TypeGamma *gamma_new, const TypeDelta *delta_new);
 
-public:
-	TMetabolitePrior(stattools::TParameterTyped<TypeGamma, 1> *Gamma, stattools::TParameterTyped<TypeDelta, 1> *Delta,
-	                 std::string Prefix);
+public : TMetabolitePrior(stattools::TParameterTyped<TypeGamma, 1> *Gamma,
+	                              stattools::TParameterTyped<TypeDelta, 1> *Delta, std::string Prefix);
 	~TMetabolitePrior() override = default;
 
 	void initializeInferred() override;

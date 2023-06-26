@@ -24,6 +24,8 @@ private:
 	// parameters
 	stattools::TParameterTyped<TypeGamma, 1> _gamma;
 	stattools::TParameterTyped<TypeDelta, 1> _delta;
+	stattools::TParameterTyped<TypeX, 2> _trueX;
+	stattools::TParameterTyped<TypeMu, 1> _mu;
 
 	// data
 	stattools::TObservationTyped<TypeLotus, 2> _lotus;

@@ -19,7 +19,9 @@ typedef coretools::Positive<double> TypeGamma;
 typedef coretools::Positive<double> TypeDelta;
 typedef coretools::UnsignedInt<uint16_t> TypeLotus;
 typedef coretools::WeakType<bool> TypeX;
-
+typedef coretools::WeakType<double> TypeMu;
+typedef coretools::WeakType<double> TypeSigma;
+typedef coretools::Positive<double> TypeAlpha;
 // ... add more
 
 #endif // METABOLITE_INFERENCE_TMETABOLITETYPES_H
