@@ -9,7 +9,7 @@ coretools/
 genometools/
 stattools/
 
-# Node artifact files
+# TNode artifact files
 node_modules/
 dist/
 

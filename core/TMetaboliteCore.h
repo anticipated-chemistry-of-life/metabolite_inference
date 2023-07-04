@@ -14,6 +14,7 @@
 #include "stattools/DAG/TDAGBuilder.h"
 #include "stattools/ParametersObservations/TObservationTyped.h"
 #include "stattools/ParametersObservations/TParameterTyped.h"
+#include "TTree.h"
 
 //--------------------------------------
 // TExample

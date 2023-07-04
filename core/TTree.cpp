@@ -3,101 +3,65 @@
 //
 
 #include "TTree.h"
-#include <fstream>
+#include "coretools/Files/TFile.h"
 #include <iostream>
 #include <sstream>
-#include <stdexcept>
-
-std::vector<std::string> split(const std::string &s, char delimiter) {
-	std::vector<std::string> tokens;
-	std::string token;
-	std::istringstream tokenStream(s);
-	while (std::getline(tokenStream, token, delimiter)) { tokens.push_back(token); }
-	return tokens;
-}
 
 // Node constructor implementation
-Node::Node(int id, float branch_length_to_parent, Node *parent)
-    : id(id), parent(parent), branch_length_to_parent(branch_length_to_parent) {}
-
-// Node is_leaf method implementation
-bool Node::is_leaf() const {
-	// A node is a leaf if its children vector is empty
-	return children.empty();
-}
+TNode::TNode(std::string IdString, double BranchLengthToParent, int Parent)
+    : _id(IdString), _parentIndex(Parent), _branchLengthToParent(BranchLengthToParent) {}
 
 // Tree destructor implementation
-Tree::~Tree() {
-	// Iterate through the nodes map and delete each Node object
-	for (auto pair : nodes) { delete pair.second; }
-}
+TTree::~TTree() {}
 
-// Tree add_node method implementation
-Node *Tree::add_node(int id, float branch_length_to_parent, int parent_id) {
-	Node *parent = nullptr;
+void TTree::load_from_file(const std::string& filename) {
+	coretools::instances::logfile().listFlush("Reading tree from file '", filename, "' ...");
+	coretools::TInputFile file(filename, coretools::TFile_Filetype::header);
 
-	// If the parent_id is not -1, we find the parent node in the nodes map
-	if (parent_id != -1) {
-		auto parent_it = nodes.find(parent_id);
-		if (parent_it == nodes.end()) {
-			// Parent node not found, create it
-			parent           = new Node(parent_id, 0); // Zero is the default branch length to its parent
-			nodes[parent_id] = parent;
-		} else {
-			parent = parent_it->second;
-			// If the parent node was a leaf, it won't be after we add this child to it
-			leaf_nodes.erase(parent_id);
-
-			// If the parent node was a root, it won't be after we add this child to it
-			root_nodes.erase(parent_id);
-		}
-	} else {
-		num_roots++;
-		// If parent_id is -1, it's a root node
-		root_nodes.insert(id);
+	if (file.numCols() != 3) {
+		UERROR("File '", filename, "' is expected tohave 3 columns, but has ", file.numCols(), " !");
 	}
 
-	// Create a new Node object and add it to the nodes map
-	Node *node = new Node(id, branch_length_to_parent, parent);
-	if (parent) {
-		// If the parent exists, add the newly created node to its children vector
-		parent->children.push_back(node);
-	}
+	// Each line is a vector of strings
+	std::vector<std::string> line;
 
-	nodes[id] = node;
-	// All new nodes are leaves when they are first added
-	leaf_nodes.insert(id);
-	return node;
-}
-
-// Get node from a tree
-Node *Tree::get_node(int id) {
-	// Find the Node object in the nodes map by its id
-	auto it = nodes.find(id);
-	if (it == nodes.end()) { throw std::runtime_error("Node id not found"); }
-	return it->second;
-}
-
-void Tree::load_from_file(const std::string &filename, char separator) {
-	std::ifstream file(filename);
-	if (!file.is_open()) { throw std::runtime_error("Cannot open file"); }
-
-	std::string line;
-	while (std::getline(file, line)) {
-		auto tokens = split(line, separator);
-		if (tokens.size() != 3) {
-			std::cerr << "Invalid line: " << line << std::endl;
-			continue;
+	//
+	while (file.read(line)) {
+		int parent_index = -1;
+		if (line[1] != "NA") {
+			auto parent = std::find(_nodes.begin(), _nodes.end(), line[1]);
+			if (parent == _nodes.end()) { UERROR("Parent '", line[1], "' of node '", line[0], "' does not exist !"); }
+			parent_index = parent - _nodes.begin();
 		}
 
-		int id                        = std::stoi(tokens[0]);
-		int parent_id                 = std::stoi(tokens[1]);
-		float branch_length_to_parent = std::stof(tokens[2]);
+		double branch_length = coretools::str::fromString<double>(line[2]);
+		_nodes.emplace_back(line[0], branch_length, parent_index);
 
-		if (parent_id == -1) { // Check if this node is a root
-			add_node(id, branch_length_to_parent);
-		} else {
-			add_node(id, branch_length_to_parent, parent_id);
+		// add child to parent
+		if (parent_index > 0) { _nodes[parent_index].addChild(_nodes.size() - 1); }
+	}
+
+	// identify roots and leaves
+	_leafIndices.resize(_nodes.size(), -1);
+	_rootIndices.resize(_nodes.size(), -1);
+	for (auto it = _nodes.begin(); it != _nodes.end(); ++it) {
+		if (it->isLeaf() == 0) {
+			_leafIndices[it - _nodes.begin()] = _leaves.size();
+			_leaves.push_back(it - _nodes.begin());
+		} else if (it->isRoot()) {
+			_rootIndices[it - _nodes.begin()] = _roots.size();
+			_roots.push_back(it - _nodes.begin());
 		}
 	}
+
+	coretools::instances::logfile().done();
+	coretools::instances::logfile().conclude("Read ", _nodes.size(), " nodes of which ", _roots.size(),
+	                                         " are roots and ", _leaves.size(), " are leaves.");
+}
+
+TNode TTree::get_node(std::string& Id) {
+	auto node_iterator = std::find(_nodes.begin(), _nodes.end(), Id);
+	if (node_iterator == _nodes.end()) { UERROR("Node '", Id, "' does not exist !"); }
+	int node_index = node_iterator - _nodes.begin();
+	return _nodes[node_index];
 }

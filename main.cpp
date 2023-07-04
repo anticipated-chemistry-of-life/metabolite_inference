@@ -9,12 +9,13 @@
 //---------------------------------------------------------------------------
 
 #include "TMetaboliteCore.h"
+#include "TTree.h"
 
 //---------------------------------------------------------------------------
 // Existing Tasks
 //---------------------------------------------------------------------------
 
-void addTaks(coretools::TMain &main) {
+void addTask(coretools::TMain &main) {
 	// Tasks consist of a name and a pointer to a TTask object.
 	// Use main.addRegularTask() to add a regular task (shown in
 	// list of available tasks) Use main.addDebugTask() to add a
@@ -45,7 +46,7 @@ int main(int argc, char *argv[]) {
 	                      "https://bitbucket.org/wegmannlab/metabolite_inference", "marco.visani@unifr.ch");
 
 	// add existing tasks and tests
-	addTaks(main);
+	addTask(main);
 	addTests(main);
 
 	// now run program
