@@ -20,8 +20,8 @@ using namespace coretools::instances;
 // TMetaboliteModel
 //--------------------------------------
 
-TMetaboliteModel::TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus, 2> &Data,
-                                   stattools::TDAGBuilder &DAGBuilder, const std::string &Filename)
+TMetaboliteModel::TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus, 2>& Data,
+                                   stattools::TDAGBuilder& DAGBuilder, const std::string& Filename)
     : _gamma("gamma", std::make_shared<stattools::prior::TExponentialFixed<stattools::TParameterBase, TypeGamma, 1>>(),
              {Filename, "1"}),
       _delta("delta", std::make_shared<stattools::prior::TExponentialFixed<stattools::TParameterBase, TypeDelta, 1>>(),

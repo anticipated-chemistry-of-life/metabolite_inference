@@ -19,7 +19,7 @@ void TTree::load_from_file(const std::string& filename) {
 	coretools::TInputFile file(filename, coretools::TFile_Filetype::header);
 
 	if (file.numCols() != 3) {
-		UERROR("File '", filename, "' is expected tohave 3 columns, but has ", file.numCols(), " !");
+		UERROR("File '", filename, "' is expected to have 3 columns, but has ", file.numCols(), " !");
 	}
 
 	// Each line is a vector of strings
