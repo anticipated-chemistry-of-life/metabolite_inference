@@ -14,7 +14,7 @@ TNode::TNode(std::string IdString, double BranchLengthToParent, int Parent)
 // Tree destructor implementation
 TTree::~TTree() {}
 
-void TTree::load_from_file(const std::string& filename) {
+void TTree::load_from_file(const std::string &filename) {
 	coretools::instances::logfile().listFlush("Reading tree from file '", filename, "' ...");
 	coretools::TInputFile file(filename, coretools::TFile_Filetype::header);
 
@@ -59,7 +59,7 @@ void TTree::load_from_file(const std::string& filename) {
 	                                         " are roots and ", _leaves.size(), " are leaves.");
 }
 
-TNode TTree::get_node(std::string& Id) {
+TNode TTree::get_node(std::string &Id) {
 	auto node_iterator = std::find(_nodes.begin(), _nodes.end(), Id);
 	if (node_iterator == _nodes.end()) { UERROR("Node '", Id, "' does not exist !"); }
 	int node_index = node_iterator - _nodes.begin();

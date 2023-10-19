@@ -9,12 +9,12 @@
 #define TEXAMPLETASK_H_
 
 #include "TMetaboliteTypes.h"
+#include "TTree.h"
 #include "coretools/Main/TParameters.h"
 #include "coretools/Main/TTask.h"
 #include "stattools/DAG/TDAGBuilder.h"
 #include "stattools/ParametersObservations/TObservationTyped.h"
 #include "stattools/ParametersObservations/TParameterTyped.h"
-#include "TTree.h"
 
 //--------------------------------------
 // TExample

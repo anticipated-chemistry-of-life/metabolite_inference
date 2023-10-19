@@ -38,8 +38,9 @@ protected:
 	double _LLRatio(const TypeX *trueX, const TypeLotus *lotus, const TypeGamma *gamma, const TypeDelta *delta,
 	                const TypeGamma *gamma_new, const TypeDelta *delta_new);
 
-public : TMetabolitePrior(stattools::TParameterTyped<TypeGamma, 1> *Gamma,
-	                              stattools::TParameterTyped<TypeDelta, 1> *Delta, std::string Prefix);
+public:
+	TMetabolitePrior(stattools::TParameterTyped<TypeGamma, 1> *Gamma, stattools::TParameterTyped<TypeDelta, 1> *Delta,
+	                 std::string Prefix);
 	~TMetabolitePrior() override = default;
 
 	void initializeInferred() override;

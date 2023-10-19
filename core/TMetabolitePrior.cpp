@@ -64,6 +64,4 @@ void TMetabolitePrior::updateParams() {
 }
 
 double TMetabolitePrior::_LLRatio(const TypeX *trueX, const TypeLotus *lotus, const TypeGamma *gamma,
-                                  const TypeDelta *delta, const TypeGamma *gamma_new, const TypeDelta *delta_new) {
-
-}
+                                  const TypeDelta *delta, const TypeGamma *gamma_new, const TypeDelta *delta_new) {}

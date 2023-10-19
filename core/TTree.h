@@ -31,7 +31,7 @@ public:
 	[[nodiscard]] bool isLeaf() const { return _children.empty(); };
 	[[nodiscard]] bool isRoot() const { return _parentIndex < 0; };
 
-	bool operator==(const std::string& Id) const { return _id == Id; };
+	bool operator==(const std::string &Id) const { return _id == Id; };
 };
 
 class TTree {
@@ -47,10 +47,10 @@ public:
 	~TTree();
 
 	// Get node by its id
-	TNode get_node(std::string& Id);
+	TNode get_node(std::string &Id);
 
 	// Method to load the tree from a file
-	void load_from_file(const std::string& filename);
+	void load_from_file(const std::string &filename);
 
 	// Find the number of roots in the tree
 	[[nodiscard]] int count_roots() const { return _roots.size(); }
