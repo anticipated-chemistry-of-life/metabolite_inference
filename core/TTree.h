@@ -5,6 +5,7 @@
 #ifndef METABOLITE_INFERENCE_TREE_H
 #define METABOLITE_INFERENCE_TREE_H
 #include "coretools/Main/TLog.h"
+#include <cstddef>
 #include <set>
 #include <string>
 #include <unordered_map>
@@ -53,7 +54,7 @@ public:
 	void load_from_file(const std::string &filename);
 
 	// Find the number of roots in the tree
-	[[nodiscard]] int count_roots() const { return _roots.size(); }
+	[[nodiscard]] size_t count_roots() const { return _roots.size(); }
 
 	// Method to get all the leaves of the tree
 	[[nodiscard]] std::vector<int> get_leaf_nodes() const { return _leaves; }

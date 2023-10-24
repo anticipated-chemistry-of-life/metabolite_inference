@@ -12,7 +12,7 @@ TNode::TNode(std::string IdString, double BranchLengthToParent, int Parent)
     : _id(IdString), _parentIndex(Parent), _branchLengthToParent(BranchLengthToParent) {}
 
 // Tree destructor implementation
-TTree::~TTree() {}
+TTree::~TTree() = default;
 
 void TTree::load_from_file(const std::string &filename) {
 	coretools::instances::logfile().listFlush("Reading tree from file '", filename, "' ...");
@@ -34,7 +34,7 @@ void TTree::load_from_file(const std::string &filename) {
 			parent_index = parent - _nodes.begin();
 		}
 
-		double branch_length = coretools::str::fromString<double>(line[2]);
+		auto branch_length = coretools::str::fromString<double>(line[2]);
 		_nodes.emplace_back(line[0], branch_length, parent_index);
 
 		// add child to parent

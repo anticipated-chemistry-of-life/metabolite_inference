@@ -44,7 +44,7 @@ TMetaboliteModel::TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus
 TMetaboliteCore::TMetaboliteCore() {}
 
 coretools::TMultiDimensionalStorage<TypeLotus, 2> TMetaboliteCore::_readData() {
-	std::string filename = parameters().getParameterFilename("lotus");
+	std::string filename = parameters().get("lotus");
 
 	// prepare names
 	auto moleculeNames = std::make_shared<coretools::TNamesStrings>();
@@ -63,7 +63,7 @@ coretools::TMultiDimensionalStorage<TypeLotus, 2> TMetaboliteCore::_readData() {
 
 void TMetaboliteCore::infer() {
 	// read prefix for writing
-	std::string outname = parameters().getParameterWithDefault("out", "metabolite");
+	std::string outname = parameters().get("out", "metabolite");
 	logfile().list("Will write files with prefix '", outname, "'. (parameter 'out')");
 
 	// read data
