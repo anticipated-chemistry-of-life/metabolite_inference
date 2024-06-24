@@ -12,9 +12,18 @@
 #include "TTree.h"
 #include "coretools/Main/TParameters.h"
 #include "coretools/Main/TTask.h"
+#include "coretools/Types/TStringHash.h"
 #include "stattools/DAG/TDAGBuilder.h"
-#include "stattools/ParametersObservations/TObservationTyped.h"
-#include "stattools/ParametersObservations/TParameterTyped.h"
+#include "stattools/ParametersObservations/TDefinition.h"
+#include "stattools/ParametersObservations/TNodeBase.h"
+#include "stattools/ParametersObservations/TObservation.h"
+#include "stattools/ParametersObservations/TParameter.h"
+#include "stattools/ParametersObservations/spec.h"
+#include "stattools/Priors/TPriorBernoulli.h"
+#include "stattools/Priors/TPriorExponential.h"
+#include "stattools/Priors/TPriorNormal.h"
+#include "stattools/Priors/TPriorPoisson.h"
+#include <memory>
 
 //--------------------------------------
 // TExample
@@ -23,17 +32,41 @@
 class TMetaboliteModel {
 private:
 	// parameters
-	stattools::TParameterTyped<TypeGamma, 1> _gamma;
-	stattools::TParameterTyped<TypeDelta, 1> _delta;
-	stattools::TParameterTyped<TypeX, 2> _trueX;
-	stattools::TParameterTyped<TypeMu, 1> _mu;
+	// gamma
+	using BoxOnGamma = stattools::prior::TExponentialFixed<stattools::TParameterBase, TypeGamma, 1>;
+	using SpecGamma  = stattools::ParamSpec<TypeGamma, stattools::Hash<coretools::toHash("gamma")>, BoxOnGamma>;
+	stattools::TParameter<SpecGamma, BoxOnGamma> _gamma;
+
+	// delta
+	using BoxOnDelta = stattools::prior::TExponentialFixed<stattools::TParameterBase, TypeDelta, 1>;
+	using SpecDelta  = stattools::ParamSpec<TypeDelta, stattools::Hash<coretools::toHash("delta")>, BoxOnDelta>;
+	stattools::TParameter<SpecDelta, BoxOnDelta> _delta;
+
+	// trueX
+	using BoxOnX = stattools::prior::TBernoulliFixed<stattools::TParameterBase, TypeX, 2>;
+	using SpecX  = stattools::ParamSpec<TypeX, stattools::Hash<coretools::toHash("X")>, BoxOnX, stattools::NumDim<2>>;
+	stattools::TParameter<SpecX, BoxOnX> _trueX;
+
+	// mu
+	using BoxOnMu = stattools::prior::TNormalFixed<stattools::TParameterBase, TypeMu, 1>;
+	using SpecMu =
+	    stattools::ParamSpec<TypeMu, stattools::Hash<coretools::toHash("mu")>, BoxOnMu, stattools::NumDim<1>>;
+	stattools::TParameter<SpecMu, BoxOnMu> _mu;
 
 	// data
-	stattools::TObservationTyped<TypeLotus, 2> _lotus;
+	using BoxOnLotus = stattools::prior::TPoissonFixed<stattools::TObservationBase, TypeLotus, 2>;
+	using SpecLotus  = stattools::TObservation<TypeLotus, 2, BoxOnLotus>;
+	std::shared_ptr<BoxOnLotus> _boxOnLotus;
+	std::shared_ptr<SpecLotus> _specLotus;
 
+	// now we create the constructor for TMetaboliteModel
 public:
 	TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus, 2> &Data, stattools::TDAGBuilder &DAGBuilder,
 	                 const std::string &Filename);
+
+	// we need to add the DAGBuilder to the DAG
+	// we need to add the parameters to the DAG
+	// we need to build
 };
 
 class TMetaboliteCore {

@@ -10,7 +10,6 @@
 #include "coretools/Main/TError.h"
 #include "coretools/Storage/TDataFile.h"
 #include "stattools/MCMC/TMCMC.h"
-#include "stattools/Priors/TPriorBernouilli.h"
 #include "stattools/Priors/TPriorExponential.h"
 #include "stattools/Priors/TPriorNormal.h"
 
@@ -22,8 +21,7 @@ using namespace coretools::instances;
 
 TMetaboliteModel::TMetaboliteModel(coretools::TMultiDimensionalStorage<TypeLotus, 2> &Data,
                                    stattools::TDAGBuilder &DAGBuilder, const std::string &Filename)
-    : _gamma("gamma", std::make_shared<stattools::prior::TExponentialFixed<stattools::TParameterBase, TypeGamma, 1>>(),
-             {Filename, "1"}),
+    : _gamma("gamma", &BoxOnGamma, {Filename, "1"}),
       _delta("delta", std::make_shared<stattools::prior::TExponentialFixed<stattools::TParameterBase, TypeDelta, 1>>(),
              {Filename, "1"}),
       _trueX("X", std::make_shared<stattools::prior::TBernouilliFixed<stattools::TParameterBase, TypeX, 2>>(),

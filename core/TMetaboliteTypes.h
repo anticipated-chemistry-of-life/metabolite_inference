@@ -7,7 +7,6 @@
 
 #include "coretools/Types/commonWeakTypes.h"
 #include "coretools/Types/probability.h"
-#include "coretools/Types/weakTypesWithLogExp.h"
 #include <cstdint>
 
 //-------------------------------
@@ -15,13 +14,13 @@
 //-------------------------------
 
 // types of parameters/observations
-typedef coretools::Positive<double> TypeGamma;
-typedef coretools::Positive<double> TypeDelta;
-typedef coretools::UnsignedInt<uint16_t> TypeLotus;
-typedef coretools::WeakType<bool> TypeX;
-typedef coretools::WeakType<double> TypeMu;
-typedef coretools::WeakType<double> TypeSigma;
-typedef coretools::Positive<double> TypeAlpha;
+typedef coretools::Positive TypeGamma;
+typedef coretools::Positive TypeDelta;
+typedef coretools::UnsignedInt16 TypeLotus;
+typedef coretools::Boolean TypeX;
+typedef coretools::Unbounded TypeMu;
+typedef coretools::Positive TypeSigma;
+typedef coretools::Positive TypeAlpha;
 // ... add more
 
 #endif // METABOLITE_INFERENCE_TMETABOLITETYPES_H

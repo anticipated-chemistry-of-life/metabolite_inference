@@ -13,6 +13,8 @@ project(metabolite_inference LANGUAGES CXX)
 
 # Needed for Language Server Protocol
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#set(OPENMP_LIBRARIES "/opt/homebrew/opt/libomp/lib")
+#set(OPENMP_INCLUDES "/opt/homebrew/opt/libomp/include")
 
 # Download coretools and stattools
 include(FetchContent)
@@ -28,12 +30,7 @@ FetchContent_Declare(stattools
         SOURCE_DIR "${CMAKE_SOURCE_DIR}/stattools"
         )
 
-FetchContent_Declare(genometools
-        GIT_REPOSITORY https://bitbucket.org/wegmannlab/genometools.git
-        GIT_TAG master
-        SOURCE_DIR "${CMAKE_SOURCE_DIR}/genometools"
-        )
-FetchContent_MakeAvailable(coretools stattools genometools)
+FetchContent_MakeAvailable(coretools stattools)
 
 #######################
 # Create core library
@@ -45,7 +42,7 @@ file(GLOB_RECURSE CORE_SOURCES core/*.h core/*.cpp)
 add_library(coreLib STATIC ${CORE_SOURCES})
 target_sources(coreLib PRIVATE ${CORE_SOURCES})
 target_include_directories(coreLib PRIVATE core SYSTEM INTERFACE core)
-target_link_libraries(coreLib PUBLIC coretools stattools genometools)
+target_link_libraries(coreLib PUBLIC coretools stattools )
 target_compile_features(coreLib PUBLIC cxx_std_17)
 set_target_properties(coreLib PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_options(coreLib PRIVATE -Wall -Wextra)

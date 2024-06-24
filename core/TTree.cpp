@@ -3,20 +3,21 @@
 //
 
 #include "TTree.h"
-#include "coretools/Files/TFile.h"
+#include "coretools/Files/TInputFile.h"
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 // Node constructor implementation
 TNode::TNode(std::string IdString, double BranchLengthToParent, int Parent)
-    : _id(IdString), _parentIndex(Parent), _branchLengthToParent(BranchLengthToParent) {}
+    : _id(std::move(IdString)), _parentIndex(Parent), _branchLengthToParent(BranchLengthToParent) {}
 
 // Tree destructor implementation
 TTree::~TTree() = default;
 
 void TTree::load_from_file(const std::string &filename) {
 	coretools::instances::logfile().listFlush("Reading tree from file '", filename, "' ...");
-	coretools::TInputFile file(filename, coretools::TFile_Filetype::header);
+	coretools::TInputFile file(filename, coretools::FileType::Header);
 
 	if (file.numCols() != 3) {
 		UERROR("File '", filename, "' is expected to have 3 columns, but has ", file.numCols(), " !");
@@ -26,7 +27,7 @@ void TTree::load_from_file(const std::string &filename) {
 	std::vector<std::string> line;
 
 	//
-	while (file.read(line)) {
+	while (file.curLine()) {
 		int parent_index = -1;
 		if (line[1] != "NA") {
 			auto parent = std::find(_nodes.begin(), _nodes.end(), line[1]);
