@@ -35,9 +35,9 @@ private:
 
 public:
 	TStorageYVector(size_t n_iterations) {
-		const uint16_t max_value = std::numeric_limits<uint16_t>::max();
-		_thinning_factor         = std::ceil(static_cast<double>(n_iterations) / static_cast<double>(max_value));
-		_total_counts            = n_iterations / _thinning_factor;
+		constexpr uint16_t max_value = std::numeric_limits<uint16_t>::max();
+		_thinning_factor             = std::ceil(static_cast<double>(n_iterations) / static_cast<double>(max_value));
+		_total_counts                = n_iterations / _thinning_factor;
 	};
 
 	// we want to check if coordinate exists in the vector or not.
@@ -50,6 +50,11 @@ public:
 		return false;
 	};
 
+	/* set_to_one will set the element at the coordinate to 1
+	 * if the element is already in the vector, we just set it to 1
+	 * if the element is not in the vector, we insert it in the vector
+	 * and set it to 1
+	 */
 	void set_to_one(uint64_t coordinate) {
 		auto [found, index] = _binary_search(coordinate);
 		if (found) {
@@ -77,6 +82,8 @@ public:
 	}
 
 	size_t get_total_counts() const { return _total_counts; }
+
+	size_t length_of_vector() const { return _vec.size(); }
 };
 
 #endif // TSTORAGEYVECTOR_H
