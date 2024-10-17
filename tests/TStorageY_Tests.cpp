@@ -49,3 +49,46 @@ TEST(YStorage_Tests, set_coordinate_max) {
 	y.set_coordinate(max);
 	EXPECT_EQ(y.get_coordinate(), max);
 }
+
+TEST(YStorage_Tests, update_counter) {
+	TStorageY y;
+	y.set_state(true);
+	y.set_counter(0);
+	y.update_counter();
+	EXPECT_EQ(y.get_counter(), 1);
+}
+
+TEST(YStorage_Tests, update_counter_false) {
+	TStorageY y;
+	y.set_state(false);
+	y.set_counter(0);
+	y.update_counter();
+	EXPECT_EQ(y.get_counter(), 0);
+}
+
+TEST(YStorage_Tests, update_counter_to_two) {
+	TStorageY y;
+	y.set_counter(1);
+	y.set_state(true);
+	y.update_counter();
+	EXPECT_EQ(y.get_counter(), 2);
+}
+
+TEST(YStorage_Tests, update_counter_incremental) {
+	TStorageY y;
+	y.set_counter(0);
+	y.set_state(true);
+	y.update_counter();
+	y.set_state(false);
+	y.update_counter();
+	y.set_counter(true);
+	y.update_counter();
+	EXPECT_EQ(y.get_counter(), 2);
+}
+
+TEST(YStorage_Tests, test_constructor) {
+	const TStorageY y;
+	EXPECT_EQ(y.get_counter(), 0);
+	EXPECT_EQ(y.is_one(), false);
+	EXPECT_EQ(y.get_coordinate(), 0);
+}
