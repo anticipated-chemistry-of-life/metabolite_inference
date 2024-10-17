@@ -79,15 +79,30 @@ TEST(YStorage_Tests, update_counter_incremental) {
 	y.set_counter(0);
 	y.set_state(true);
 	y.update_counter();
+	EXPECT_EQ(y.get_counter(), 1);
+}
+TEST(YStorage_Tests, update_counter_incremental_2) {
+	TStorageY y;
+	y.set_state(true);
+	y.update_counter();
 	y.set_state(false);
 	y.update_counter();
-	y.set_counter(true);
+	EXPECT_EQ(y.get_counter(), 1);
+}
+
+TEST(YStorage_Tests, update_counter_incremental_3) {
+	TStorageY y;
+	y.set_state(true);
+	y.update_counter();
+	y.set_state(false);
+	y.update_counter();
+	y.set_state(true);
 	y.update_counter();
 	EXPECT_EQ(y.get_counter(), 2);
 }
 
 TEST(YStorage_Tests, test_constructor) {
-	const TStorageY y;
+	constexpr TStorageY y;
 	EXPECT_EQ(y.get_counter(), 0);
 	EXPECT_EQ(y.is_one(), false);
 	EXPECT_EQ(y.get_coordinate(), 0);
