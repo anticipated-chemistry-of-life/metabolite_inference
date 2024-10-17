@@ -1,92 +1,71 @@
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-if (NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
-endif ()
-
-if (POLICY CMP0048)
-    cmake_policy(SET CMP0048 NEW)
-endif (POLICY CMP0048)
+endif()
 
 # Project
-project(metabolite_inference LANGUAGES CXX)
+project(acol LANGUAGES CXX)
 
-# Needed for Language Server Protocol
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-#set(OPENMP_LIBRARIES "/opt/homebrew/opt/libomp/lib")
-#set(OPENMP_INCLUDES "/opt/homebrew/opt/libomp/include")
+# Executable
+add_executable(${PROJECT_NAME} main.cpp)
+
+file(GLOB_RECURSE CORE_SOURCES CONFIGURE_DEPENDS core/* tests/integrationtests/*)
 
 # Download coretools and stattools
 include(FetchContent)
 FetchContent_Declare(coretools
-        GIT_REPOSITORY https://bitbucket.org/wegmannlab/coretools.git
-        GIT_TAG master
-        SOURCE_DIR "${CMAKE_SOURCE_DIR}/coretools"
-        )
+        GIT_REPOSITORY    https://bitbucket.org/wegmannlab/coretools.git
+        GIT_TAG           madleina/interface_stattools
+        SOURCE_DIR        "${CMAKE_SOURCE_DIR}/coretools"
+)
 
 FetchContent_Declare(stattools
-        GIT_REPOSITORY https://bitbucket.org/wegmannlab/stattools.git
-        GIT_TAG master
-        SOURCE_DIR "${CMAKE_SOURCE_DIR}/stattools"
-        )
+        GIT_REPOSITORY    https://bitbucket.org/wegmannlab/stattools.git
+        GIT_TAG           madleina/interface
+        SOURCE_DIR        "${CMAKE_SOURCE_DIR}/stattools"
+)
 
-FetchContent_MakeAvailable(coretools stattools)
+FetchContent_Declare(genometools
+        GIT_REPOSITORY    https://bitbucket.org/wegmannlab/genometools.git
+        GIT_TAG           master
+        SOURCE_DIR        "${CMAKE_SOURCE_DIR}/genometools"
+)
+FetchContent_MakeAvailable(coretools stattools genometools)
 
-#######################
-# Create core library
-#######################
-# assemble list of cpp and h files in core folder
-file(GLOB_RECURSE CORE_SOURCES core/*.h core/*.cpp)
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
-#Core library
-add_library(coreLib STATIC ${CORE_SOURCES})
-target_sources(coreLib PRIVATE ${CORE_SOURCES})
-target_include_directories(coreLib PRIVATE core SYSTEM INTERFACE core)
-target_link_libraries(coreLib PUBLIC coretools stattools )
-target_compile_features(coreLib PUBLIC cxx_std_17)
-set_target_properties(coreLib PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_options(coreLib PRIVATE -Wall -Wextra)
-
-#######################
-# Executable
-#######################
-
-# add executable to be built
-add_executable(${PROJECT_NAME}
-        main.cpp)
-
-# link libraries
-target_link_libraries(${PROJECT_NAME} PUBLIC
-        coreLib
-        )
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_sources(${PROJECT_NAME} PRIVATE ${CORE_SOURCES})
+target_include_directories(${PROJECT_NAME} PRIVATE core)
+target_link_libraries(${PROJECT_NAME} PRIVATE coretools stattools genometools ${ZLIB_LIBRARIES} ${ARMADILLO_LIBRARIES})
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
+target_compile_definitions(${PROJECT_NAME} PRIVATE DEVTOOLS DEV_LOCATION)
 
-#######################
-# Tests
-#######################
+# Test
+add_executable("${PROJECT_NAME}_unitTests" EXCLUDE_FROM_ALL)
+
+file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS tests/*)
+
+include(FetchContent)
 FetchContent_Declare(
         googletest
         GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG main
+        GIT_TAG        main
 )
 FetchContent_MakeAvailable(googletest)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 option(gtest_disable_pthreads "Disable uses of pthreads in gtest." ON)
 
-# define executable
-add_executable("${PROJECT_NAME}_unitTests" EXCLUDE_FROM_ALL)
-
-#assemble list of test cpp and h files
-file(GLOB_RECURSE TEST_SOURCES tests/*.h tests/*.cpp)
-
-target_include_directories("${PROJECT_NAME}_unitTests" PRIVATE coretools/core/IntegrationTests coretools/tests tests)
-
-target_sources("${PROJECT_NAME}_unitTests" PRIVATE ${TEST_SOURCES})
-target_link_libraries("${PROJECT_NAME}_unitTests" PRIVATE coreLib gtest_main gmock_main)
-target_compile_features("${PROJECT_NAME}_unitTests" PRIVATE cxx_std_17)
+target_sources("${PROJECT_NAME}_unitTests" PRIVATE ${CORE_SOURCES} ${TEST_SOURCES})
+target_include_directories("${PROJECT_NAME}_unitTests" PRIVATE tests core)
+target_link_libraries("${PROJECT_NAME}_unitTests" PRIVATE coretools stattools genometools gtest_main gmock_main)
 target_compile_definitions("${PROJECT_NAME}_unitTests" PRIVATE CHECK_INTERVALS)
-set_target_properties("${PROJECT_NAME}_unitTests" PROPERTIES CXX_EXTENSIONS OFF)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_options("${PROJECT_NAME}_unitTests" PRIVATE -Wall -Wextra)
-

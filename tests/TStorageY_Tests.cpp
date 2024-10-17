@@ -1,0 +1,51 @@
+#include "TStorageY.h"
+#include "gtest/gtest.h"
+
+TEST(YStorage_Tests, set_counter) {
+	TStorageY y;
+	y.set_counter(1458);
+	EXPECT_EQ(y.get_counter(), 1458);
+}
+
+TEST(YStorage_Tests, set_count_zero) {
+	TStorageY y;
+	y.set_counter(0);
+	EXPECT_EQ(y.get_counter(), 0);
+}
+
+TEST(YStorage_Tests, set_count_max) {
+	TStorageY y;
+	y.set_counter(std::numeric_limits<uint16_t>::max());
+	EXPECT_EQ(y.get_counter(), std::numeric_limits<uint16_t>::max());
+}
+
+TEST(YStorage_Tests, set_state_true) {
+	TStorageY y;
+	y.set_state(true);
+	EXPECT_EQ(y.is_one(), true);
+}
+
+TEST(YStorage_Tests, set_state_false) {
+	TStorageY y;
+	y.set_state(false);
+	EXPECT_EQ(y.is_one(), false);
+}
+
+TEST(YStorage_Tests, set_coordinate) {
+	TStorageY y;
+	y.set_coordinate(18987);
+	EXPECT_EQ(y.get_coordinate(), 18987);
+}
+
+TEST(YStorage_Tests, set_coordinate_zero) {
+	TStorageY y;
+	y.set_coordinate(0);
+	EXPECT_EQ(y.get_coordinate(), 0);
+}
+
+TEST(YStorage_Tests, set_coordinate_max) {
+	TStorageY y;
+	const uint64_t max = std::pow(2, 47) - 1; // because we have set to 47 bits the maximal number of coordinates
+	y.set_coordinate(max);
+	EXPECT_EQ(y.get_coordinate(), max);
+}
