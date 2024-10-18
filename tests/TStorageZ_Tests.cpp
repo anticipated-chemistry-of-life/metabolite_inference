@@ -28,4 +28,8 @@ TEST(TStorageZ_Tests, test_set_state) {
 	EXPECT_EQ(z.is_one(), false);
 	z.set_state(false);
 	EXPECT_EQ(z.is_one(), false);
+	z.set_state(true);
+	EXPECT_EQ(z.is_one(), true);
+	z.set_state(true);
+	EXPECT_EQ(z.is_one(), true);
 }

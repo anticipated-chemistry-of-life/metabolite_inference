@@ -13,7 +13,7 @@ private:
 	size_t _thinning_factor;
 	size_t _total_counts;
 	std::vector<TStorageY> _vec;
-	std::pair<bool, size_t> _binary_search(uint64_t coordinate) const {
+	[[nodiscard]] std::pair<bool, size_t> _binary_search(uint64_t coordinate) const {
 
 		// lower_bound return the first element that is not less than the value
 		auto it = std::lower_bound(_vec.begin(), _vec.end(), coordinate);
@@ -34,7 +34,7 @@ private:
 	};
 
 public:
-	TStorageYVector(size_t n_iterations) {
+	TStorageYVector(const size_t n_iterations) {
 		constexpr uint16_t max_value = std::numeric_limits<uint16_t>::max();
 		_thinning_factor             = std::ceil(static_cast<double>(n_iterations) / static_cast<double>(max_value));
 		_total_counts                = n_iterations / _thinning_factor;
@@ -44,7 +44,7 @@ public:
 	// the coordinate is the position of the element in the Y dimension
 	// so if an element is in the vector that means it is currently a one or
 	// it has been in the past iteration.
-	bool is_one(uint64_t coordinate) const {
+	[[nodiscard]] bool is_one(const uint64_t coordinate) const {
 		auto [found, index] = _binary_search(coordinate);
 		if (found) { return _vec[index].is_one(); }
 		return false;
