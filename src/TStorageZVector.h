@@ -4,14 +4,14 @@
 
 #ifndef TSTORAGEZVECTOR_H
 #define TSTORAGEZVECTOR_H
-#include "TStorageY.h"
 #include "TStorageZ.h"
+#include <cassert>
 #include <vector>
 
 class TStorageZVector {
 private:
 	std::vector<TStorageZ> _vec;
-	[[nodiscard]] std::pair<bool, size_t> _binary_search(int32_t coordinate) const {
+	[[nodiscard]] std::pair<bool, size_t> _binary_search(uint32_t coordinate) const {
 
 		// lower_bound return the first element that is not less than the value
 		auto it = std::lower_bound(_vec.begin(), _vec.end(), coordinate);
@@ -41,6 +41,7 @@ public:
 	};
 
 	void set_to_one(int32_t coordinate) {
+		assert(0 < coordinte && "Coordinate must be positive");
 		const int32_t abs_coordinate = std::abs(coordinate);
 		auto [found, index]          = _binary_search(abs_coordinate);
 		if (found) {
@@ -55,6 +56,12 @@ public:
 		auto [found, index]          = _binary_search(abs_coordinate);
 		if (found) { _vec[index].set_state(false); }
 	}
+
+	void remove_zeros() {
+		_vec.erase(std::remove_if(_vec.begin(), _vec.end(), [](const TStorageZ &storage) { return !storage.is_one(); }),
+		           _vec.end());
+	}
+	size_t size() const { return _vec.size(); }
 };
 
 #endif // TSTORAGEZVECTOR_H

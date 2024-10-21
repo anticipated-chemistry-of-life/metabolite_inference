@@ -57,6 +57,9 @@ public:
 		if (is_one()) { set_counter(get_counter() + 1); }
 	}
 
+	/* we reset the counter (this will be used after the burn-in period of the MCMC) */
+	void reset_counter() { set_counter(0); }
+
 	bool operator<(const TStorageY &right) const { return get_coordinate() < right.get_coordinate(); }
 	bool operator<(const uint64_t right) const { return get_coordinate() < right; }
 	bool operator==(const uint64_t right) const { return get_coordinate() == right; }

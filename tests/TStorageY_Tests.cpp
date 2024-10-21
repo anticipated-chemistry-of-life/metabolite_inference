@@ -107,3 +107,10 @@ TEST(YStorage_Tests, test_constructor) {
 	EXPECT_EQ(y.is_one(), false);
 	EXPECT_EQ(y.get_coordinate(), 0);
 }
+
+TEST(YStorage_Tests, reset_counter) {
+	TStorageY y;
+	y.set_counter(1458);
+	y.reset_counter();
+	EXPECT_EQ(y.get_counter(), 0);
+}

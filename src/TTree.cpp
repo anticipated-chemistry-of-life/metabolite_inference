@@ -8,10 +8,6 @@
 #include <sstream>
 #include <utility>
 
-// Node constructor implementation
-TNode::TNode(std::string IdString, double BranchLengthToParent, int Parent)
-    : _id(std::move(IdString)), _parentIndex(Parent), _branchLengthToParent(BranchLengthToParent) {}
-
 // Tree destructor implementation
 TTree::~TTree() = default;
 
@@ -23,30 +19,37 @@ void TTree::load_from_file(const std::string &filename) {
 		UERROR("File '", filename, "' is expected to have 3 columns, but has ", file.numCols(), " !");
 	}
 
-	// Each line is a vector of strings
-	std::vector<std::string> line;
-
 	//
-	while (file.curLine()) {
-		int parent_index = -1;
-		if (line[1] != "NA") {
-			auto parent = std::find(_nodes.begin(), _nodes.end(), line[1]);
-			if (parent == _nodes.end()) { UERROR("Parent '", line[1], "' of node '", line[0], "' does not exist !"); }
+	for (; !file.empty(); file.popFront()) {
+		bool is_root        = true;
+		size_t parent_index = 0;
+		if (file.get(1) != "NA") {
+			// we read line by line the edge list from the file
+			// if the child node (column 0) is not in the tree, we add the node,
+			// if the parent is not in the tree, we add the node and set the parent as root
+			// as long as it has no parents.
+			//
+			//
+			// auto parent = std::find(_nodes.begin(), _nodes.end(), file.get(1));
+			// if (parent == _nodes.end()) {
+			// 	UERROR("Parent '", file.get(1), "' of node '", file.get(0), "' does not exist !");
+			// }
+			// TODO implement our way
 			parent_index = parent - _nodes.begin();
 		}
 
-		auto branch_length = coretools::str::fromString<double>(line[2]);
-		_nodes.emplace_back(line[0], branch_length, parent_index);
+		auto branch_length = file.get<double>(2);
+		_nodes.emplace_back(file.get(0), branch_length, parent_index, is_root);
 
 		// add child to parent
-		if (parent_index > 0) { _nodes[parent_index].addChild(_nodes.size() - 1); }
+		if (!is_root) { _nodes[parent_index].addChild(_nodes.size() - 1); }
 	}
 
 	// identify roots and leaves
 	_leafIndices.resize(_nodes.size(), -1);
 	_rootIndices.resize(_nodes.size(), -1);
 	for (auto it = _nodes.begin(); it != _nodes.end(); ++it) {
-		if (it->isLeaf() == 0) {
+		if (it->isLeaf()) {
 			_leafIndices[it - _nodes.begin()] = _leaves.size();
 			_leaves.push_back(it - _nodes.begin());
 		} else if (it->isRoot()) {

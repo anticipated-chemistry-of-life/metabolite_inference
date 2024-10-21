@@ -32,15 +32,15 @@ TEST(YStorageVector_Tests, set_to_one_and_zero) {
 
 TEST(YStorageVector_Tests, get_size_of_vector) {
 	TStorageYVector y(100000);
-	EXPECT_EQ(y.length_of_vector(), 0);
+	EXPECT_EQ(y.size(), 0);
 	y.set_to_one(1458);
-	EXPECT_EQ(y.length_of_vector(), 1);
+	EXPECT_EQ(y.size(), 1);
 	y.set_to_one(1459);
-	EXPECT_EQ(y.length_of_vector(), 2);
+	EXPECT_EQ(y.size(), 2);
 	y.set_to_one(1460);
-	EXPECT_EQ(y.length_of_vector(), 3);
+	EXPECT_EQ(y.size(), 3);
 	y.set_to_zero(1458);
-	EXPECT_EQ(y.length_of_vector(), 3);
+	EXPECT_EQ(y.size(), 3);
 }
 
 TEST(YStorageVector_Tests, get_fraction_of_ones) {
@@ -66,4 +66,53 @@ TEST(YStorageVector_Tests, get_fraction_of_ones) {
 
 	y.set_to_zero(16);
 	EXPECT_EQ(y.get_fraction_of_ones(16), 0.00004);
+}
+
+TEST(YStorageVector_Tests, reset_counter) {
+	TStorageYVector y(100000);
+	y.set_to_one(1458);
+	y.set_to_one(16);
+	y.set_to_one(17);
+	y.set_to_one(4587);
+
+	y.add_to_counter(100);
+	y.add_to_counter(1000);
+	y.add_to_counter(3);
+
+	y.reset_counts();
+
+	EXPECT_EQ(y.get_fraction_of_ones(1458), 0.0);
+	EXPECT_EQ(y.get_fraction_of_ones(16), 0.0);
+}
+
+TEST(YStorageVector_Tests, remove_zeros_from_vector) {
+	TStorageYVector y(100000);
+	y.set_to_one(1458);
+	y.set_to_one(16);
+	y.set_to_one(17);
+	y.set_to_one(4587);
+
+	y.add_to_counter(100);
+	y.add_to_counter(1000);
+	y.add_to_counter(3);
+
+	y.remove_zeros();
+
+	EXPECT_EQ(y.size(), 4);
+}
+
+TEST(YStorageVector_Tests, remove_zeros_from_vector_2) {
+	TStorageYVector y(100000);
+	y.set_to_one(1458);
+	y.set_to_zero(16);
+	y.set_to_one(17);
+	y.set_to_one(4587);
+
+	y.add_to_counter(100);
+	y.add_to_counter(1000);
+	y.add_to_counter(3);
+
+	y.remove_zeros();
+
+	EXPECT_EQ(y.size(), 3);
 }

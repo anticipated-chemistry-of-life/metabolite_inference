@@ -34,7 +34,7 @@ private:
 	};
 
 public:
-	TStorageYVector(const size_t n_iterations) {
+	explicit TStorageYVector(const size_t n_iterations) {
 		constexpr uint16_t max_value = std::numeric_limits<uint16_t>::max();
 		_thinning_factor             = std::ceil(static_cast<double>(n_iterations) / static_cast<double>(max_value));
 		_total_counts                = n_iterations / _thinning_factor;
@@ -83,7 +83,17 @@ public:
 
 	size_t get_total_counts() const { return _total_counts; }
 
-	size_t length_of_vector() const { return _vec.size(); }
+	size_t size() const { return _vec.size(); }
+
+	void reset_counts() {
+		for (auto &elem : _vec) { elem.reset_counter(); }
+	}
+
+	// we want to remove all the elements that have the element to zero
+	void remove_zeros() {
+		_vec.erase(std::remove_if(_vec.begin(), _vec.end(), [](const TStorageY &elem) { return !elem.is_one(); }),
+		           _vec.end());
+	}
 };
 
 #endif // TSTORAGEYVECTOR_H

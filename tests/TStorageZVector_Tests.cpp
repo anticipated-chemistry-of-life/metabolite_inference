@@ -56,3 +56,14 @@ TEST(ZStorageVector_Tests, max_int32_value) {
 	z.set_to_one(std::numeric_limits<int32_t>::max());
 	EXPECT_EQ(z.is_one(std::numeric_limits<int32_t>::max()), true);
 }
+
+TEST(ZStorageVector_Tests, remove_zeros) {
+	TStorageZVector z;
+	z.set_to_one(1458);
+	z.set_to_one(1459);
+	z.set_to_one(1460);
+	z.set_to_zero(1459);
+	z.remove_zeros();
+
+	EXPECT_EQ(z.size(), 2);
+}
