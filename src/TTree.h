@@ -14,11 +14,11 @@
 
 class TNode {
 private:
-	std::string _id;                   // unique identifier for the node
-	size_t _parentIndex;               // pointer to parent node
-	double _branchLengthToParent;      // branch length to parent node
-	size_t _discretised_branch_length; // discretised branch length
-	std::vector<size_t> _children;     // vector to child nodes indices
+	std::string _id;                     // unique identifier for the node
+	size_t _parentIndex;                 // pointer to parent node
+	double _branchLengthToParent;        // branch length to parent node
+	size_t _discretised_branch_length{}; // discretised branch length
+	std::vector<size_t> _children;       // vector to child nodes indices
 	bool _is_root;
 
 public:
@@ -38,6 +38,9 @@ public:
 	[[nodiscard]] bool isLeaf() const { return _children.empty(); };
 	[[nodiscard]] bool isRoot() const { return _is_root; };
 	[[nodiscard]] double branchLengthToParent() const { return _branchLengthToParent; };
+	void set_is_root(bool is_root) { _is_root = is_root; }
+	void set_branch_length_to_parent(double branch_length) { _branchLengthToParent = branch_length; }
+	void set_parent_index(size_t parent_index) { _parentIndex = parent_index; }
 
 	bool operator==(const std::string &Id) const { return _id == Id; };
 };
@@ -68,5 +71,7 @@ public:
 
 	// Method to get all the root nodes
 	[[nodiscard]] const std::vector<size_t> &get_root_nodes() const { return _roots; }
+
+	bool in_tree(const std::string &node);
 };
 #endif // METABOLITE_INFERENCE_TREE_H
